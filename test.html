@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kou Fu Color Printing Corporation | Applicant Registration</title>
+    <!-- JQuery -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> 
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--jQuery Validation Plugin-->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/additional-methods.min.js"></script>
+    <!--MomentJs-->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js"></script>
+    <!-- Eonasdan Date Timepicker -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    <!--Limonte Sweetalert 2-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.3.6/sweetalert2.min.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.3.6/sweetalert2.all.min.js"></script>
+
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-analytics.js";
+        import {
+            getFirestore, doc, getDoc, setDoc, collection, addDoc, updateDoc, deleteDoc, deleteField
+        } from "https://www.gstatic.com/firebasejs/9.6.4/firebase-firestore.js";
+
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+          apiKey: "AIzaSyD7JAtz9n8tcKbew3irsu0qEspB5T4-aK0",
+          authDomain: "fir-regapp-21aee.firebaseapp.com",
+          projectId: "fir-regapp-21aee",
+          storageBucket: "fir-regapp-21aee.appspot.com",
+          messagingSenderId: "914191234475",
+          appId: "1:914191234475:web:3d40dc9e9a91e1de488eee",
+          measurementId: "G-ZE4GKFRWCQ"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+
+
+          //onclick event submit form
+        $(document).ready(function(){
+            const db = getFirestore();
+            $("#applicant_registration_button").click(function(){
+                //submit to firestore database
+                var userid = firebase.firestore().ref().child('applicant_basicinfo').push().key;
+                var firstname = $("#applicant_basicinfo_firstname").val();
+                var middlename = $("#applicant_basicinfo_middlename").val();
+                var lastname = $("#applicant_basicinfo_lastname").val();
+
+                getFireS
+                //add to collection
+                var db = firebase.firestore().collection("applicant_basicinfo/"+userid);
+                db.add({
+                    firstname: firstname,
+                    middlename: middlename,
+                    lastname: lastname
+                })
+                .then(() => {
+                    console.log("Document written with ID: ");
+                    swal({
+                        title: "Success",
+                        text: "Your application has been submitted",
+                        icon: "success",
+                        button: "OK",
+                    });
+                })
+
+            });
+        });
+
+        /* $("#applicant-registration-form").validate({
+			rules: {
+				//basic info
+                applicant_basicinfo_firstname: {
+                    required: true,
+                },
+                applicant_basicinfo_middlename: {
+                    required: true,
+                },
+                applicant_basicinfo_lastname: {
+                    required: true,
+                }
+            },
+            messages: {
+                applicant_basicinfo_firstname: {
+                    required: "Please enter your first name.",
+                },
+                applicant_basicinfo_middlename: {
+                    required: "Please enter your middle name.",
+                },
+                applicant_basicinfo_lastname: {
+                    required: "Please enter your last name.",
+                },
+            },
+            submitHandler: submitForm
+        });
+
+        function submitForm() {
+            //var data = $("#applicant-registration-form").serialize();
+            //add each field to the data variable data for each field
+            applicant_basicinfo_firstname= $("#applicant_basicinfo_firstname").val();
+            applicant_basicinfo_middlename= $("#applicant_basicinfo_middlename").val();
+            applicant_basicinfo_lastname= $("#applicant_basicinfo_lastname").val();
+            var data = {
+                applicant_basicinfo_firstname: applicant_basicinfo_firstname,
+                applicant_basicinfo_middlename: applicant_basicinfo_middlename,
+                applicant_basicinfo_lastname: applicant_basicinfo_lastname
+            }
+            console.log(data);
+
+            //firebase firestore add to collection then swal alert
+            let db = firebase.firestore().collection("applicant");
+            db.add(data).then(()=>{
+                swal({
+                    title: "Success!",
+                    text: "Your application has been submitted.",
+                    icon: "success",
+                    button: "OK",
+                });
+                console.log("Document successfully written!");
+
+            }).catch(function(error) {
+                swal({
+                    title: "Error!",
+                    text: "Your application has not been submitted.",
+                    icon: "error",
+                    button: "OK",
+                });
+                console.error("Error writing document: ", error);
+
+            });            
+        }*/ 
+      </script>
+</head>
+<body>
+    <div class="container" >
+        <div class="row">                
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <form class="form-applicant-registration" method="POST" id="applicant-registration-form">
+                    <!--Basic Info-->
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <h3>Basic Info</h3>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <label for="">First Name</label>
+                                    <input type="text" class="form-control" placeholder="First Name" name="applicant_basicinfo_firstname" id="applicant_basicinfo_firstname" />
+                                    <span id="check-e"></span>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <label for="">Middle Name</label>
+                                    <input type="text" class="form-control" placeholder="Middle Name" name="applicant_basicinfo_middlename" id="applicant_basicinfo_middlename" />
+                                    <span id="check-e"></span>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <label for="">Last Name</label>
+                                    <input type="text" class="form-control" placeholder="Last Name" name="applicant_basicinfo_lastname" id="applicant_basicinfo_lastname" />
+                                    <span id="check-e"></span>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right">
+                                <button type="submit" class="btn btn-success" name="applicant_registration_button" id="applicant_registration_button"> Create My Resume <i class="fa fa-arrow-circle-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>  
+        </div>
+    </div>
+</body>
+</html>
